@@ -11,7 +11,7 @@ class CVRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -26,7 +26,7 @@ class CVRequest extends FormRequest
                 'required',
                 'file',
                 'mimes:pdf',
-                'max:5120',
+                'max:' . config('cv.max_size'),
             ],
         ];
     }
