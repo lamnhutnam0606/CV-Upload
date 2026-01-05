@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('cvs', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid')->unique();
             $table->string('file_path');
             $table->string('original_name');
-            $table->string('mime_type');
-            $table->integer('size');
+            $table->string('mime_type', 100);
+            $table->unsignedBigInteger('size');
             $table->string('email')->nullable();
             $table->string('full_name')->nullable();
             $table->json('raw_text')->nullable();

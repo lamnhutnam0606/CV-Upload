@@ -5,8 +5,15 @@ interface TitleProp {
     title: string;
 };
 
+interface FlashSession {
+    // type?: 'success' | 'error' | 'warning';
+    // message: string;
+    success: string;
+}
+
 export default function ApplyCV({title}: TitleProp) {
-    const { props } = usePage();
+    const { flash } = usePage<{ flash?: FlashSession }>().props;
+    console.log(flash);
     const { data, setData, post, processing, errors } = useForm<{
         cv_file: File | null,
     }>({
@@ -26,15 +33,24 @@ export default function ApplyCV({title}: TitleProp) {
             <h3 className="text-xl text-center font-semibold mb-4">
             { title }
             </h3>
-
+            {flash?.success && (
+                <div className={
+                    // flash.type === 'success'
+                    // ? 'bg-green-100 text-green-800 p-2 rounded'
+                    // : 'bg-green-100 text-red-800 p-2 rounded'
+                    'bg-green-100 text-green-800 p-2 rounded'
+                }>
+                    {flash.success}
+                </div>
+            )}
             <form onSubmit={submit} className="space-y-4">
                 <div>
                     <label className="block text-sm font-medium mb-1">
-                    CV (PDF, DOC)
+                    CV (PDF)
                     </label>
                     <input
                     type="file"
-                    accept=".pdf,.doc,.docx"
+                    accept=".pdf"
                     className="w-full"
                     onChange={(e) => setData('cv_file', e.target.files ? e.target.files[0] : null)}
                     />
