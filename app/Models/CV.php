@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
+// use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class CV extends Model
 {
+    // use HasUuids;
     protected $table = 'cvs';
     protected $fillable = [
+        'uuid',
         'file_path',
         'original_name',
         'mime_type',
@@ -17,11 +19,4 @@ class CV extends Model
         'full_name',
         'raw_text',
     ];
-
-    protected static function booted()
-    {
-        static::creating(function ($model) {
-            $model->uuid = (string) Str::uuid();
-        });
-    }
 }
