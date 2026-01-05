@@ -12,12 +12,15 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
-Route::get('apply-cv', [ApplyCVController::class, 'create'])->name('cv.apply.form');
-
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
+});
+
+Route::middleware('web')->group(function () {
+    Route::get('apply-cv', [ApplyCVController::class, 'create'])->name('cv.apply.form');
+    Route::post('/cv/parse', [ApplyCVController::class, 'parse'])->name('cv.parse');
 });
 
 require __DIR__.'/settings.php';

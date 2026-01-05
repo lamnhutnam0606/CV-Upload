@@ -3,7 +3,6 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
         {{-- Inline script to detect system dark mode preference and apply it immediately --}}
         <script>
             (function() {
@@ -40,7 +39,7 @@
         <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
 
         @viteReactRefresh
-        @vite(["resources/js/app.tsx", "resources/js/pages/{$page['component']}.tsx"])
+        @vite(["resources/js/app.tsx"])
         @inertiaHead
     </head>
     <body class="font-sans antialiased">
