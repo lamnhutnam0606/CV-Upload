@@ -35,13 +35,13 @@ class ApplyCVController extends Controller
         //     'message' => 'Upload CV successfull',
         // ]);
 
-        $time = Carbon::now();
+        $time = Carbon::now()->format('Y-m-d H:i:s');
         //message to chatwork
         $message = <<<TEXT
             [info][title]📄 CV mới được nộp[/title]
             👤 Tên: 'Chưa xác định'
             📧 Email: 'Chưa có'
-            📎 File: 'xxx'
+            📎 File: {$data['original_name']}
             ⏰ Thời gian: {$time}
             [/info]
             TEXT;
