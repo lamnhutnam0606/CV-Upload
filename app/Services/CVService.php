@@ -3,21 +3,30 @@
 namespace App\Services;
 
 use App\Models\CV;
+use Illuminate\Support\Facades\Storage;
 
 class CVService
 {
-    public function store($file)
+    public function store($file, string $uuid)
     {
-        $disk = config('cv.disk');
-        $path = config('cv.upload_path');
+        // $disk = config('cv.disk');
+        // $path = config('cv.upload_path');
 
-        $storedPath = $file->store($path, $disk);
+        // $storedPath = $file->store($path, $disk);
+        $filename = $uuid . '.' . $file->getClientOriginalExtension();
 
-        return CV::create([
-            'file_path'     => $storedPath,
+        $path = Storage::disk('public')->putFileAs(
+            'cvs',
+            $file,
+            $filename,
+        );
+
+        return [
+            'uuid' => $uuid,
+            'file_path'     => $path,
             'original_name' => $file->getClientOriginalName(),
             'mime_type'     => $file->getClientMimeType(),
             'size'          => $file->getSize(),
-        ]);
+        ];
     }
 }
