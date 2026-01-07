@@ -18,5 +18,12 @@ class CV extends Model
         'email',
         'full_name',
         'raw_text',
+        'ai_result',
+        'ai_status',
+    ];
+
+    public $casts = [
+        'raw_text' => 'json',
+        'ai_result' => 'array',
     ];
 }
