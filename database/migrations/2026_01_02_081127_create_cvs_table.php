@@ -20,7 +20,7 @@ return new class extends Migration
             $table->unsignedBigInteger('size');
             $table->string('email')->nullable();
             $table->string('full_name')->nullable();
-            $table->json('raw_text')->nullable();
+            $table->longText('raw_text')->nullable();
             $table->timestamps();
         });
     }

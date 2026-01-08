@@ -2,51 +2,59 @@
 
 namespace App\Services;
 
-use App\Models\CV;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 class CVAIService
 {
     public function analyze($cv)
     {
-        $text = is_array($cv->raw_text) 
-            ? ($cv->raw_text['text'] ?? '')
-            : $cv->raw_text;
+        $text = $this->normalizeText($cv->raw_text ?? []);
 
-        $prompt = str_replace('{{CV_TEXT}}', $text, config('cv.ai_prompt'));
+        $prompt = str_replace(
+            '{{CV_TEXT}}',
+            $text,
+            config('cv.ai_prompt')
+        );
 
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . env('OPENAI_API_KEY'),
-            'Content-Type' => 'application/json',
-        ])->post('https://api.openai.com/v1/responses', [
+        $response = Http::withToken(config('cv.openai.api_key'))
+            ->post('https://api.openai.com/v1/responses', [
             'model' => 'gpt-4o-mini',
             'input' => $prompt,
         ]);
 
-        if (!$response->successful()) {
+       if (!$response->successful()) {
+            logger()->error('OpenAI error', [
+                'status' => $response->status(),
+                'body' => $response->body(),
+            ]);
             throw new \Exception('OpenAI API error');
         }
 
-        $raw = $response->json();
-        $textOutput = data_get($raw, 'output.0.content.0.text');
-        $parsed = $this->parseAIJson($textOutput);
-        return [
-            'parsed' => $parsed,
-            'score'  => $parsed['score'] ?? null,
-            'raw'    => $raw,
-        ];
+        return $this->extractJson($response->json());
     }
 
     //lean and parse
-    public function parseAIJson(string $text)
+    public function extractJson(array $response)
     {
-        $clean = preg_replace('/```json|```/', '', $text);
-        $data = json_decode(trim($clean), true);
+        return $response['output'][0]['content'][0]['text']
+            ?? throw new \RuntimeException('Invalid AI JSON structure');
+    }
 
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new \Exception('Invalid AI JSON response');
+    protected function normalizeText(string $text)
+    {
+        $text = trim($text);
+
+        if (str_starts_with($text, '{')) {
+            $decoded = json_decode($text, true);
+
+            if (json_last_error() === JSON_ERROR_NONE && isset($decoded['text'])) {
+                $text = $decoded['text'];
+            }
         }
 
-        return $data;
+        $text = preg_replace('/\s+/', ' ', $text);
+
+        return Str::limit(trim($text), 10_000);
     }
 }
