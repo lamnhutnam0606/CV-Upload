@@ -21,12 +21,12 @@ class CVService
             $filename,
         );
 
-        return [
-            'uuid' => $uuid,
+        return CV::create([
+            'uuid'          => $uuid,
             'file_path'     => $path,
             'original_name' => $file->getClientOriginalName(),
             'mime_type'     => $file->getClientMimeType(),
             'size'          => $file->getSize(),
-        ];
+        ]);
     }
 }

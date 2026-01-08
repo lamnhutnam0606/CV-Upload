@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CVRequest;
+use App\Jobs\AnalyzeCVJob;
 use App\Jobs\NotifyChatworkJob;
 use App\Models\CV;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use App\Services\CVService;
 use Inertia\Inertia;
+use Spatie\PdfToText\Pdf;
 
 class ApplyCVController extends Controller
 {
@@ -21,14 +23,14 @@ class ApplyCVController extends Controller
         ]);
     }
 
-    public function parse(CVRequest $request, CV $cv)
+    public function parse(CVRequest $request)
     {
         $uuid = (string) Str::uuid();
-        $data = $this->cvService->store($request->file('cv_file'), $uuid);
-
-        $cv::create([
-            'uuid' => $uuid,
-            ...$data,
+        $cv = $this->cvService->store($request->file('cv_file'), $uuid);
+        $cv->update([
+            'raw_text' => [
+                'text' => Pdf::getText($request->file('cv_file')->getPathname())
+            ]
         ]);
         // return redirect()->back()->with('flash', [
         //     'type' => 'success',
@@ -41,11 +43,12 @@ class ApplyCVController extends Controller
             [info][title]📄 CV mới được nộp[/title]
             👤 Tên: 'Chưa xác định'
             📧 Email: 'Chưa có'
-            📎 File: {$data['original_name']}
+            📎 File: {}
             ⏰ Thời gian: {$time}
             [/info]
             TEXT;
 
+        AnalyzeCVJob::dispatch($cv->id);
         NotifyChatworkJob::dispatch([
             'message' => $message
         ]);
