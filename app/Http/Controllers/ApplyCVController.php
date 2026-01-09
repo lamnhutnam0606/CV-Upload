@@ -32,10 +32,6 @@ class ApplyCVController extends Controller
                 'text' => Pdf::getText($request->file('cv_file')->getPathname())
             ]
         ]);
-        // return redirect()->back()->with('flash', [
-        //     'type' => 'success',
-        //     'message' => 'Upload CV successfull',
-        // ]);
 
         $time = Carbon::now()->format('Y-m-d H:i:s');
         //message to chatwork

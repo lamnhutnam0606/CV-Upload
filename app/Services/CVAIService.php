@@ -31,7 +31,9 @@ class CVAIService
             throw new \Exception('OpenAI API error');
         }
 
-        return $this->extractJson($response->json());
+        $validated = AIOutputValidator::validate(json_decode($this->extractJson($response->json()), true));
+
+        return $validated;
     }
 
     //lean and parse
