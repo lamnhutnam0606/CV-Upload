@@ -33,7 +33,6 @@ return [
     "phone": "",
     "skills": [],
     "years_experience": 0,
-    "position_suggested": "",
     "summary": "",
     "score": 0
     }
