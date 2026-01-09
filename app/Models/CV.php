@@ -23,7 +23,6 @@ class CV extends Model
     ];
 
     public $casts = [
-        'raw_text' => 'json',
         'ai_result' => 'array',
     ];
 }

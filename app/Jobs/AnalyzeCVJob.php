@@ -32,7 +32,7 @@ class AnalyzeCVJob implements ShouldQueue
         try {
             $result = $cvAIService->analyze($cv);
             $cv->update([
-                'ai_result' => $result['parsed'],
+                'ai_result' => $result,
                 'ai_status' => 'done',
             ]);
         } catch (\Throwable $e) {
