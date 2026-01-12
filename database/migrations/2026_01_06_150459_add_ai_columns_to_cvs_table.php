@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('cvs', function (Blueprint $table) {
+            $table->string('phone')->nullable()->unique()->after('email');
             $table->text('ai_result')->nullable()->after('raw_text');
             $table->string('ai_status', 50)->nullable()->after('ai_result');
         });
@@ -23,7 +24,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('cvs', function (Blueprint $table) {
-            $table->dropColumn(['ai_result', 'ai_status']);
+            $table->dropColumn(['phone', 'ai_result', 'ai_status']);
         });
     }
 };

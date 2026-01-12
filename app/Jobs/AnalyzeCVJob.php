@@ -31,9 +31,13 @@ class AnalyzeCVJob implements ShouldQueue
 
         try {
             $result = $cvAIService->analyze($cv);
+            $respone = json_decode($result, true);
             $cv->update([
                 'ai_result' => $result,
                 'ai_status' => 'done',
+                'email' => $respone['email'] ?? null,
+                'phone' => $respone['phone'] ?? null,
+                'full_name' => $respone['full_name'] ?? null,
             ]);
         } catch (\Throwable $e) {
             $cv->update(['ai_status' => 'failed']);

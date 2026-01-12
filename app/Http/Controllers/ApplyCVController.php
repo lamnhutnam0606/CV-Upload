@@ -18,8 +18,16 @@ class ApplyCVController extends Controller
     {}
     public function create()
     {
-        return Inertia::render('ApplyCV', [
+        return Inertia::render('cv/apply', [
             'title' => 'CV',
+        ]);
+    }
+
+    public function list()
+    {
+        $cvs = CV::latest()->get();
+        return Inertia::render('cv/list', [
+            'cvs' => $cvs,
         ]);
     }
 

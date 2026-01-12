@@ -19,8 +19,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::middleware('web')->group(function () {
-    Route::get('apply-cv', [ApplyCVController::class, 'create'])->name('cv.apply.form');
+    Route::get('/apply-cv', [ApplyCVController::class, 'create'])->name('cv.apply.form');
     Route::post('/cv/parse', [ApplyCVController::class, 'parse'])->name('cv.parse');
+});
+
+Route::prefix('dashboard')->group(function () {
+    Route::get('/list', [ApplyCVController::class, 'list']);
 });
 
 require __DIR__.'/settings.php';

@@ -16,6 +16,7 @@ class CV extends Model
         'mime_type',
         'size',
         'email',
+        'phone',
         'full_name',
         'raw_text',
         'ai_result',

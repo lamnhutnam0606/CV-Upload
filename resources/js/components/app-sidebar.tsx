@@ -10,10 +10,10 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard } from '@/routes';
+import { dashboard, list } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, FileBadge2 } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -22,6 +22,11 @@ const mainNavItems: NavItem[] = [
         href: dashboard(),
         icon: LayoutGrid,
     },
+    {
+        title: 'CV',
+        href: list(),
+        icon: FileBadge2,
+    }
 ];
 
 const footerNavItems: NavItem[] = [
