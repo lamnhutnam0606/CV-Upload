@@ -24,7 +24,7 @@ Route::middleware('web')->group(function () {
 });
 
 Route::prefix('dashboard')->group(function () {
-    Route::get('/list', [ApplyCVController::class, 'list']);
+    Route::get('/list', [ApplyCVController::class, 'list'])->name('cv.list');
 });
 
 require __DIR__.'/settings.php';
