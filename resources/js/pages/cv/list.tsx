@@ -1,11 +1,15 @@
 import AppLayout from "@/layouts/app-layout";
 import { formatDate } from "@/utils/format-date";
+import { useState } from "react";
+import CvPreview from "../modal/cv-preview";
 
 type CV = {
+    id: number,
     full_name: string,
     email: string,
     phone: string,
     summary: string,
+    ai_status: string,
     created_at: string,
 }
 
@@ -14,6 +18,8 @@ interface Props {
 }
 
 export default function List({cvs}: Props) {
+    const [selectedCv, setSelectedCV] = useState<CV | null>(null);
+    console.log(selectedCv);
     return (
         <AppLayout>
             <div className="p-6">
@@ -47,7 +53,7 @@ export default function List({cvs}: Props) {
                             )}
 
                             {cvs.map((cv, index) => (
-                                <tr className="hover:bg-gray-50 hover:text-black">
+                                <tr key={index} className="hover:bg-gray-50 hover:text-black">
                                     <td className="p-2 border text-center">
                                         {index + 1}
                                     </td>
@@ -70,7 +76,7 @@ export default function List({cvs}: Props) {
 
                                     <td className="p-2 border text-center">
                                         <button
-                                            // onClick={() => window.open(cv.file_path, '_blank')}
+                                            onClick={() => setSelectedCV(cv)}
                                             className="px-2 py-1 text-sm text-blue-600 bg-gray-50 border border-blue-600 rounded hover:bg-green-50"
                                         >
                                             Preview
@@ -80,8 +86,15 @@ export default function List({cvs}: Props) {
                             ))}
                         </tbody>
                     </table>
+
+                    {selectedCv && (
+                        <CvPreview
+                            cv={selectedCv}
+                            onClose={() => setSelectedCV(null)}
+                        />
+                    )}
                 </div>
             </div>
-            </AppLayout>
+        </AppLayout>
     )
 }
